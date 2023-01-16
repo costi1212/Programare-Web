@@ -13,10 +13,13 @@ public class OrderStatusService {
     OrderStatusRepository orderStatusRepository;
 
     public OrderStatus createOrderStatus(OrderStatus orderStatus){
-
+        OrderStatus existingOrderStatus = orderStatusRepository.findFirstByCode(orderStatus.getCode()).get();
         orderStatusRepository.save(orderStatus);
         return orderStatus;
+    }
 
+    public OrderStatus findByCode(OrderStatus orderStatus){
+        return orderStatusRepository.findFirstByCode(orderStatus.getCode()).get();
     }
 
 }
