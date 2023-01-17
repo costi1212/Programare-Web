@@ -1,5 +1,6 @@
 package com.viezure.programareWeb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.jfr.Registered;
 
 import javax.persistence.*;
@@ -47,6 +48,7 @@ public class User extends BaseEntity{
     private Date lastLogin;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Order> orderSet;
 
     public String getFirstName() {

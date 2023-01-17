@@ -6,6 +6,7 @@ import com.viezure.programareWeb.model.Item;
 import com.viezure.programareWeb.model.Order;
 import com.viezure.programareWeb.model.OrderStatus;
 import com.viezure.programareWeb.model.User;
+import com.viezure.programareWeb.repository.ItemRepository;
 import com.viezure.programareWeb.repository.OrderRepository;
 import com.viezure.programareWeb.repository.OrderStatusRepository;
 import com.viezure.programareWeb.repository.UserRepository;
@@ -30,7 +31,16 @@ public class OrderService {
     UserRepository userRepository;
 
     @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
     OrderItemService orderItemService;
+
+    @Autowired
+    OrderStatusService orderStatusService;
+
+    @Autowired
+    UserService userService;
 
     @Value("${order.status.duplicate.code}")
     String duplicateCodeMessage;
@@ -41,8 +51,13 @@ public class OrderService {
     @Value("${order.not.exists}")
     String orderNotExistsMessage;
 
+    public Order createOrder (Order order, String username){
 
+        order.setOrderStatus(orderStatusRepository.findFirstByCode("REGISTERED").get());
+        order.setUser(userService.getByUsername(username));
+        return orderRepository.save(order);
 
+    }
 
     public List<Order> getAllOrdersByStatusCode (String code){
 
@@ -63,18 +78,17 @@ public class OrderService {
             throw new OrderStatusNotFoundException(notExistsMessage, statusCode);
     }
 
-    public Order addItemsToOrder (Map<Item, Long> itemMap, Long id){
-
+    public Order addItemsToOrder (Map<Long, Long> itemMap, Long id){
         Optional<Order> order = orderRepository.findById(id);
         if(order.isPresent()){
-            itemMap.forEach((item, amount) ->{
+            itemMap.forEach((itemId, amount) ->{
+                Item item = itemRepository.getReferenceById(itemId);
                 orderItemService.addOrderItemToOrder(item, amount, order.get());
             });
             return order.get();
         }
         else
             throw new OrderNotFoundException(notExistsMessage, id);
-
     }
 
     public List<Order> getAllOrdersByUser (String username){

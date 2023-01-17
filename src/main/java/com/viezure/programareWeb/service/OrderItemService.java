@@ -4,6 +4,7 @@ import com.viezure.programareWeb.model.Item;
 import com.viezure.programareWeb.model.Order;
 import com.viezure.programareWeb.model.OrderItem;
 import com.viezure.programareWeb.repository.OrderItemRepository;
+import com.viezure.programareWeb.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,9 @@ public class OrderItemService {
     OrderItemRepository orderItemRepository;
 
     @Autowired
-    OrderService orderService;
+    OrderRepository orderRepository;
 
-    public OrderItem addOrderItemToOrder(Item item, Long amount, Order order){
+    public void addOrderItemToOrder(Item item, Long amount, Order order){
         OrderItem orderItem = this.findByOrderAndItem(item, order);
         if(orderItem == null) {
             OrderItem createdOrderItem = new OrderItem();
@@ -26,12 +27,23 @@ public class OrderItemService {
             createdOrderItem.setOrder(order);
             createdOrderItem.setQuantity(amount);
             createdOrderItem.setPrice(getOrderItemPrice(item, amount));
+            order.setSubTotal(order.getSubTotal() == null ? createdOrderItem.getPrice() : order.getSubTotal() + createdOrderItem.getPrice());
+            if(order.getDiscount() != null)
+                order.setGrandTotal(order.getSubTotal() * order.getDiscount() / 100 );
+            else
+                order.setGrandTotal(order.getSubTotal());
+            orderRepository.save(order);
             orderItemRepository.save(createdOrderItem);
-            return createdOrderItem;
         }
         else {
             orderItem.setQuantity(orderItem.getQuantity() + amount);
-            return orderItem;
+            order.setSubTotal(order.getSubTotal() == null ? orderItem.getPrice() : order.getSubTotal() + orderItem.getPrice());
+            if(order.getDiscount() != null)
+                order.setGrandTotal(order.getSubTotal() * order.getDiscount() / 100 );
+            else
+                order.setGrandTotal(order.getSubTotal());
+            orderRepository.save(order);
+            orderItemRepository.save(orderItem);
         }
     }
 

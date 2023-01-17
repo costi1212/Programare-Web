@@ -1,5 +1,8 @@
 package com.viezure.programareWeb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import java.util.HashSet;
@@ -21,6 +24,7 @@ public class Order extends BaseEntity{
     private Float discount;
 
     @OneToMany(mappedBy = "order")
+    @JsonIgnore
     private Set<OrderItem> orderItemSet;
 
     @ManyToOne

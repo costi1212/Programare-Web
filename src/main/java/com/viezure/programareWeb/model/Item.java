@@ -1,5 +1,6 @@
 package com.viezure.programareWeb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,12 +34,15 @@ public class Item extends BaseEntity{
     private Float discount;
 
     @OneToMany(mappedBy = "item")
+    @JsonIgnore
     private Set <OrderItem> orderItemSet;
 
     @OneToMany(mappedBy = "item")
+    @JsonIgnore
     private Set <ItemReview> itemReviewSet;
 
     @OneToMany(mappedBy = "item")
+    @JsonIgnore
     private Set <ItemCategory> itemCategorySet;
 
 }

@@ -1,6 +1,7 @@
 package com.viezure.programareWeb.service;
 
 import com.viezure.programareWeb.exception.user.DuplicateEmailException;
+import com.viezure.programareWeb.exception.user.UserNotFoundException;
 import com.viezure.programareWeb.model.User;
 import com.viezure.programareWeb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class UserService {
     @Value("${user.exception.duplicate.username}")
     String duplicateEmailUsername;
 
+    @Value("${user.not.found.exception}")
+    String userNotFoundMessage;
+
     public List <User> getAllUsers(){
 
         return userRepository.findAll();
@@ -43,6 +47,16 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
+    public User getByUsername(String username){
+        Optional <User> user = userRepository.getByUsername(username);
+        if(user.isPresent()){
+            return user.get();
+        }
+        else
+            throw new UserNotFoundException(userNotFoundMessage);
+    }
+
 
 
 }
