@@ -13,6 +13,10 @@ public class ItemCategory extends BaseEntity {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     public Item getItem() {
         return item;
     }
@@ -28,9 +32,5 @@ public class ItemCategory extends BaseEntity {
     public void setCategory(Category category) {
         this.category = category;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
 
 }
