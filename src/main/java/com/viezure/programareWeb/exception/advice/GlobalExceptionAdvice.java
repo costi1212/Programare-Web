@@ -1,6 +1,8 @@
 package com.viezure.programareWeb.exception.advice;
 
+import com.viezure.programareWeb.exception.order.OrderNotFoundException;
 import com.viezure.programareWeb.exception.orderStatus.DuplicateCodeException;
+import com.viezure.programareWeb.exception.orderStatus.OrderStatusNotFoundException;
 import com.viezure.programareWeb.exception.user.DuplicateEmailException;
 import com.viezure.programareWeb.exception.user.DuplicateUsernameException;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +26,11 @@ public class GlobalExceptionAdvice {
     public ResponseEntity handle(DuplicateCodeException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
+    @ExceptionHandler({OrderStatusNotFoundException.class})
+    public ResponseEntity handle(OrderStatusNotFoundException e){ return ResponseEntity.badRequest().body(e.getMessage());}
+
+    @ExceptionHandler({OrderNotFoundException.class})
+    public ResponseEntity handle(OrderNotFoundException e){ return ResponseEntity.badRequest().body(e.getMessage());}
 
 }

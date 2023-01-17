@@ -1,11 +1,17 @@
 package com.viezure.programareWeb.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.Max;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @SequenceGenerator(name = "SEQ_GEN", sequenceName = "SEQ_ITEM", allocationSize = 1)
 public class Item extends BaseEntity{
@@ -22,6 +28,10 @@ public class Item extends BaseEntity{
     @Column(name = "price")
     private Float price;
 
+    @Column(name = "discount")
+    @Max(100)
+    private Float discount;
+
     @OneToMany(mappedBy = "item")
     private Set <OrderItem> orderItemSet;
 
@@ -31,51 +41,4 @@ public class Item extends BaseEntity{
     @OneToMany(mappedBy = "item")
     private Set <ItemCategory> itemCategorySet;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAvailableUnits() {
-        return availableUnits;
-    }
-
-    public void setAvailableUnits(String availableUnits) {
-        this.availableUnits = availableUnits;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public Set<OrderItem> getOrderItemSet() {
-        return orderItemSet;
-    }
-
-    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
-        this.orderItemSet = orderItemSet;
-    }
-
-    public Set<ItemReview> getItemReviewSet() {
-        return itemReviewSet;
-    }
-
-    public void setItemReviewSet(Set<ItemReview> itemReviewSet) {
-        this.itemReviewSet = itemReviewSet;
-    }
 }

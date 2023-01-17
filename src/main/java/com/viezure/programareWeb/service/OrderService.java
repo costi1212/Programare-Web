@@ -1,7 +1,8 @@
 package com.viezure.programareWeb.service;
 
+import com.viezure.programareWeb.exception.order.OrderNotFoundException;
 import com.viezure.programareWeb.exception.orderStatus.OrderStatusNotFoundException;
-import com.viezure.programareWeb.exception.user.DuplicateEmailException;
+import com.viezure.programareWeb.model.Item;
 import com.viezure.programareWeb.model.Order;
 import com.viezure.programareWeb.model.OrderStatus;
 import com.viezure.programareWeb.model.User;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,11 +29,19 @@ public class OrderService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    OrderItemService orderItemService;
+
     @Value("${order.status.duplicate.code}")
     String duplicateCodeMessage;
 
     @Value("${order.status.not.exists}")
     String notExistsMessage;
+
+    @Value("${order.not.exists}")
+    String orderNotExistsMessage;
+
+
 
 
     public List<Order> getAllOrdersByStatusCode (String code){
@@ -39,6 +49,7 @@ public class OrderService {
         return orderRepository.getAllOrdersByStatusCode(code);
 
     }
+
 
     public Order setOrderStatus (Long orderId, String statusCode){
         Optional<OrderStatus> orderStatus = orderStatusRepository.findFirstByCode(statusCode);
@@ -52,10 +63,25 @@ public class OrderService {
             throw new OrderStatusNotFoundException(notExistsMessage, statusCode);
     }
 
+    public Order addItemsToOrder (Map<Item, Long> itemMap, Long id){
+
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isPresent()){
+            itemMap.forEach((item, amount) ->{
+                orderItemService.addOrderItemToOrder(item, amount, order.get());
+            });
+            return order.get();
+        }
+        else
+            throw new OrderNotFoundException(notExistsMessage, id);
+
+    }
+
     public List<Order> getAllOrdersByUser (String username){
         Optional <User> user = userRepository.getByUsername(username);
         List<Order> orderList = orderRepository.findAllByUser(user.get());
         return orderList;
     }
+
 
 }

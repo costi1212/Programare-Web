@@ -1,6 +1,7 @@
 package com.viezure.programareWeb.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public class Order extends BaseEntity{
     private Double grandTotal;
 
     @Column(name = "discount")
+    @Max(100)
     private Float discount;
 
     @OneToMany(mappedBy = "order")

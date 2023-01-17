@@ -20,7 +20,7 @@ public class OrderItem extends BaseEntity{
 
     @Column(name = "quantity")
     @Min(value = 1)
-    private Integer quantity;
+    private Long quantity;
 
     @Column(name = "price")
     private Float price;
@@ -42,11 +42,11 @@ public class OrderItem extends BaseEntity{
         this.order = order;
     }
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
