@@ -28,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping("/addItems/{id}")
-    public ResponseEntity <Order> addItems(@RequestBody Map<Long, Long> items, @RequestParam Long id){
+    public ResponseEntity <Order> addItems(@RequestBody Map<Long, Long> items, @PathVariable Long id){
 
         Order updatedOrder = orderService.addItemsToOrder(items, id);
         return new ResponseEntity<>(updatedOrder, HttpStatus.OK);

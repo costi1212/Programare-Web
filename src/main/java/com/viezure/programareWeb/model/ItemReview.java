@@ -15,7 +15,7 @@ public class ItemReview extends BaseEntity {
     @Column(name = "rating")
     @Min(value = 1)
     @Max(value = 10)
-    private Integer rating;
+    private Float rating;
 
     @Column(name = "content")
     private String content;
@@ -36,11 +36,11 @@ public class ItemReview extends BaseEntity {
         this.title = title;
     }
 
-    public Integer getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 

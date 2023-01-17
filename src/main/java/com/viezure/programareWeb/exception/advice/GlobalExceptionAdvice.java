@@ -1,5 +1,6 @@
 package com.viezure.programareWeb.exception.advice;
 
+import com.viezure.programareWeb.exception.item.ItemNotFoundException;
 import com.viezure.programareWeb.exception.order.OrderNotFoundException;
 import com.viezure.programareWeb.exception.orderStatus.DuplicateCodeException;
 import com.viezure.programareWeb.exception.orderStatus.OrderStatusNotFoundException;
@@ -38,5 +39,8 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler({OrderNotFoundException.class})
     public ResponseEntity handle(OrderNotFoundException e){ return ResponseEntity.badRequest().body(e.getMessage());}
+
+    @ExceptionHandler({ItemNotFoundException.class})
+    public ResponseEntity handle(ItemNotFoundException e){return ResponseEntity.badRequest().body(e.getMessage());}
 
 }

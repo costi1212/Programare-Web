@@ -26,20 +26,24 @@ public class OrderItemService {
             createdOrderItem.setItem(item);
             createdOrderItem.setOrder(order);
             createdOrderItem.setQuantity(amount);
-            createdOrderItem.setPrice(getOrderItemPrice(item, amount));
+            Float newPrice = getOrderItemPrice(item, amount);
+            createdOrderItem.setPrice(newPrice);
             order.setSubTotal(order.getSubTotal() == null ? createdOrderItem.getPrice() : order.getSubTotal() + createdOrderItem.getPrice());
             if(order.getDiscount() != null)
-                order.setGrandTotal(order.getSubTotal() * order.getDiscount() / 100 );
+                order.setGrandTotal(order.getSubTotal() * (100-order.getDiscount()) / 100 );
             else
                 order.setGrandTotal(order.getSubTotal());
+
             orderRepository.save(order);
             orderItemRepository.save(createdOrderItem);
         }
         else {
             orderItem.setQuantity(orderItem.getQuantity() + amount);
-            order.setSubTotal(order.getSubTotal() == null ? orderItem.getPrice() : order.getSubTotal() + orderItem.getPrice());
+            Float newPrice = getOrderItemPrice(item, amount);
+            orderItem.setPrice(orderItem.getPrice() + newPrice);
+            order.setSubTotal(order.getSubTotal() == null ? newPrice : order.getSubTotal() + newPrice);
             if(order.getDiscount() != null)
-                order.setGrandTotal(order.getSubTotal() * order.getDiscount() / 100 );
+                order.setGrandTotal(order.getSubTotal() * (100-order.getDiscount()) / 100 );
             else
                 order.setGrandTotal(order.getSubTotal());
             orderRepository.save(order);
@@ -55,7 +59,7 @@ public class OrderItemService {
 
     public Float getOrderItemPrice(Item item, Long amount){
 
-        return item.getPrice() * amount * item.getDiscount() /100;
+        return item.getPrice() * amount * (100 - item.getDiscount()) / 100;
 
     }
 

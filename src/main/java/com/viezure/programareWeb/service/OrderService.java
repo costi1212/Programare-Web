@@ -69,7 +69,7 @@ public class OrderService {
     public Order setOrderStatus (Long orderId, String statusCode){
         Optional<OrderStatus> orderStatus = orderStatusRepository.findFirstByCode(statusCode);
         if(orderStatus.isPresent()){
-            Order order = orderRepository.getById(orderId);
+            Order order = orderRepository.findById(orderId).get();
             order.setOrderStatus(orderStatus.get());
             orderRepository.save(order);
             return order;

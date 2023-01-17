@@ -24,7 +24,7 @@ public class Item extends BaseEntity{
     private String description;
 
     @Column(name = "available_units")
-    private String availableUnits;
+    private Long availableUnits;
 
     @Column(name = "price")
     private Float price;
